@@ -3,7 +3,6 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import { ImageContainer, ProductContainer, ProductDetails } from '@/src/styles/pages/product'
 
-import camisa1 from '../../assets/camisetas/1.png'
 import { stripe } from '@/src/lib/stripe'
 import Stripe from 'stripe'
 
@@ -14,11 +13,13 @@ interface ProductProps {
         imageUrl: string;
         price: string;
         description: string;
+        defaultPriceId: string;
     }
 }
 
 export default function Product({product} : ProductProps) {
     const {isFallback} = useRouter()
+
 
     if(isFallback ) {
 
@@ -27,6 +28,10 @@ export default function Product({product} : ProductProps) {
             Loading...
           </div>
         )
+    }
+
+    function handleBuyProduct() {
+        console.log(product.defaultPriceId)
     }
 
     return (
@@ -41,7 +46,7 @@ export default function Product({product} : ProductProps) {
 
                 <p>{product.description}</p>
 
-                <button>
+                <button onClick={handleBuyProduct}>
                     Comprar agora
                 </button>
             </ProductDetails>
@@ -70,20 +75,19 @@ export const getStaticProps: GetStaticProps<any, {id: string}> = async ({params}
 
     const price = product.default_price as Stripe.Price
 
-
-
     return {
         props: {
           product: {
             id: product.id,
             name: product.name,
             imageUrl: product.images[0],
+            description: product.description,
+            defaultPriceId: price.id,
             price: new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',
             }).format(price.unit_amount! / 100),
           },
-          description: product.description
         },
         revalidate: 60 * 60 * 1, // 1hour
     }
