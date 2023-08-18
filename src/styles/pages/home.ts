@@ -44,16 +44,6 @@ export const Product = styled('div', {
         opacity: 0,
         transition: 'all 0.2s ease-in-out',
 
-        strong: {
-            fontSize: '$lg',
-            color: '$gray100'
-        },
-
-        span: {
-            fontSize: '$xl',
-            fontWeight: 'bold',
-            color: '$green300'
-        }
     },
 
     '&:hover': {
@@ -62,4 +52,30 @@ export const Product = styled('div', {
             opacity: 1,
         }
     }
+})
+
+export const ProductDescriptions = styled('div', {
+    display: 'flex',
+    flexDirection: 'column',
+
+    strong: {
+        fontSize: '$lg',
+        color: '$gray100'
+    },
+
+    span: {
+        fontSize: '$xl',
+        fontWeight: 'bold',
+        color: '$green300'
+    }
+})
+
+export const BagProducts = styled('div', {
+    backgroundColor: '$green500',
+    width: 46,
+    height: 46,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 4
 })

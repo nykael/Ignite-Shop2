@@ -8,6 +8,7 @@ import Stripe from 'stripe'
 import axios from 'axios'
 import { useState } from 'react'
 import Head from 'next/head'
+import { useCart } from '@/src/hooks/useCart'
 
 interface ProductProps {
     product: {
@@ -22,6 +23,7 @@ interface ProductProps {
 
 export default function Product({product} : ProductProps) {
     const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
+    const {cart} = useCart()
 
     const {isFallback} = useRouter()
 
@@ -37,15 +39,17 @@ export default function Product({product} : ProductProps) {
 
     async function handleBuyProduct() {
         try {
-            setIsCreatingCheckoutSession(true)
+            // setIsCreatingCheckoutSession(true)
             
-            const response = await axios.post('/api/checkout', {
-                priceId: product.defaultPriceId,
-            })
+            // const response = await axios.post('/api/checkout', {
+            //     priceId: product.defaultPriceId,
+            // })
 
-            const { checkoutUrl } = response.data
+            // const { checkoutUrl } = response.data
 
-            window.location.href = checkoutUrl
+            // window.location.href = checkoutUrl
+            console.log(product)
+
 
         } catch (error) {
             alert('Falha ao redirecionar ao checkout')
@@ -71,7 +75,7 @@ export default function Product({product} : ProductProps) {
                     <p>{product.description}</p>
 
                     <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
-                        Comprar agora
+                        Colocar na sacola
                     </button>
                 </ProductDetails>
             </ProductContainer>

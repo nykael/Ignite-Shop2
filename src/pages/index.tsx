@@ -3,12 +3,15 @@ import Head from "next/head"
 import { stripe } from "../lib/stripe"
 import Image from "next/image"
 import Link from 'next/link'
+import { PiHandbagBold} from 'react-icons/pi'
+
 
 import { useKeenSlider } from 'keen-slider/react'
 
-import { HomeContainer, Product } from "../styles/pages/home"
+import { BagProducts, HomeContainer, Product, ProductDescriptions } from "../styles/pages/home"
 
 import Stripe from "stripe"
+import { theme } from "../styles"
 
 interface HomeProps {
   products: {
@@ -21,6 +24,8 @@ interface HomeProps {
 
 
 export default function Home({products} : HomeProps) {
+  const {colors} = theme
+
   const [sliderRef] = useKeenSlider({
     slides: {
       perView: 3,
@@ -42,8 +47,15 @@ export default function Home({products} : HomeProps) {
               <Product className="keen-slider__slide">
                 <Image src={product.imageUrl} width={520} height={480} alt="" />
                 <footer>
-                  <strong>{product.name}</strong>
-                  <span>{product.price}</span>
+                  <ProductDescriptions>
+                    <strong>{product.name}</strong>
+                    <span>{product.price}</span>
+                  </ProductDescriptions>
+                   
+                   <BagProducts>
+                       <PiHandbagBold size={30} color={colors.gray100} />
+                   </BagProducts>
+
                 </footer>
               </Product>
             </Link>
