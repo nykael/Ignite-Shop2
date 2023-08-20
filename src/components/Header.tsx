@@ -11,7 +11,8 @@ export function Heade() {
     const {colors} = theme
     const {cart} = useCart()
 
-    console.log(cart)
+       console.log('AQUIEEEE =>', cart)
+
 
     return (
         <Header>
@@ -19,9 +20,9 @@ export function Heade() {
         <Bag>
           <PiHandbagBold color={colors.gray500} />
          { 
-          cart !== undefined &&
+          cart.length !== 0 &&
           (<div>
-            <p>1</p>
+            <p>{cart.length}</p>
           </div>)
          }
         </Bag>

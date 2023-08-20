@@ -18,12 +18,13 @@ interface ProductProps {
         price: string;
         description: string;
         defaultPriceId: string;
+        quantity: number,
     }
 }
 
 export default function Product({product} : ProductProps) {
     const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
-    const {cart} = useCart()
+    const {dispatch} = useCart()
 
     const {isFallback} = useRouter()
 
@@ -49,6 +50,7 @@ export default function Product({product} : ProductProps) {
 
             // window.location.href = checkoutUrl
             console.log(product)
+            dispatch({type: 'ADD_TO_CART', payload: product})
 
 
         } catch (error) {
@@ -112,6 +114,7 @@ export const getStaticProps: GetStaticProps<any, {id: string}> = async ({params}
             imageUrl: product.images[0],
             description: product.description,
             defaultPriceId: price.id,
+            quantity: 1,
             price: new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',

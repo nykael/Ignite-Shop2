@@ -25,12 +25,12 @@ interface CartContextProps {
     dispatch: React.Dispatch<CartAction>
 }
 
-export const CartContext = createContext<CartContextProps>({} as CartContextProps)
+export const CartContext = createContext<CartContextProps | undefined>(undefined)
 
 const cartReducer = (state: CartState, action: CartAction) : CartState  => {
     switch(action.type) {
         case 'ADD_TO_CART':
-         const existingItemIndex = state.findIndex(item => item.id);
+         const existingItemIndex = state.findIndex(item => item.id === action.payload.id);
          if (existingItemIndex !== -1) {
             const updatedCart = [...state];
             updatedCart[existingItemIndex].quantity += 1;
@@ -43,17 +43,18 @@ const cartReducer = (state: CartState, action: CartAction) : CartState  => {
         default:
             return state
     }
-
     
 }
 
 
-export function BagContextProvider({children} : CartContextProviderProps ) {
-    const [cart, dispatch] = useReducer(cartReducer, [])
-
+export function BagContextProvider({ children }: CartContextProviderProps) {
+    const [cart, dispatch] = useReducer(cartReducer, []);
+  
+    console.log('AQUIEEEE =>', cart);
+  
     return (
-        <CartContext.Provider value={{cart,dispatch}}>
-            {children}
-        </CartContext.Provider>
-    )
-}
+      <CartContext.Provider value={{ cart, dispatch }}>
+        {children}
+      </CartContext.Provider>
+    );
+  }
