@@ -3,6 +3,7 @@ import Image from "next/image";
 import { AiOutlineFullscreenExit } from 'react-icons/ai'
 import { useCart } from "@/src/hooks/useCart";
 import { CartContextDataProps } from "@/src/context/Bag";
+import { CalculateTotalQuantity } from "@/src/utils/CalculateTotalQuantity";
 
 interface CartProps {
   toggledCard: () => void ;
@@ -20,6 +21,13 @@ export function ShoppingCart({toggledCard, isOpen} : CartProps) {
         dispatch({type: 'REMOVE_FROM_CART', payload: item })
     }
 
+    function handlePrice(){
+        return cart.reduce((total, item) => {
+            const price = parseFloat(item.price.replace(/[^\d.,]/g, '').replace(',', '.')); // Convertendo a string para número de ponto flutuante
+            return total + price * item.quantity;
+        }, 0);
+    }
+
     return (
         <CartContainer isOpen={isOpen}>
             <ButtonExit>
@@ -32,45 +40,45 @@ export function ShoppingCart({toggledCard, isOpen} : CartProps) {
             {   
                 cart.length !== 0 ?
 
-                cart.map((cart) => (
-                    <div key={cart.id}>
-                        <ContentCardItems >
-                            <CartView >
+                <div >
+                   <ContentCardItems >
+                   { cart.map((cartItem) => (
+                            <CartView key={cartItem.id} >
                             <CartImage>
-                                <Image src={cart.imageUrl} alt="" width={120} height={110} />
+                                <Image src={cartItem.imageUrl} alt="" width={120} height={110} />
                             </CartImage>
                             
                             <Card>
-                                <samp>{cart.name}</samp>
-                                <strong>{cart.price}</strong>
+                                <samp>{cartItem.name}</samp>
+                                <strong>{cartItem.price}</strong>
 
-                                <p onClick={() => handleRemoveShirt(cart)}>
+                                <p onClick={() => handleRemoveShirt(cartItem)}>
                                     Remover
                                 </p>
                             </Card>
                             </CartView>
-                       </ContentCardItems>
+                        ))}
+                    </ContentCardItems>
 
-                        <CartDescription>
+                    <CartDescription>
                           <div>
                               <h4>Quantidade</h4>
-                              <h3> itens</h3>
+                              <h3>  
+                                {CalculateTotalQuantity(cart)} itens
+                              </h3>
                            </div>
 
                            <div>
                              <h2>Valor Total</h2>
-                             <h1>R$ 270,00</h1>
+                             <h1>R$ {handlePrice().toFixed(2)}</h1>
                            </div>
 
                             <button>
                                 Finalizar Compra
                             </button>
-                        </CartDescription>
-                    </div>
-                ))
-              
+                    </CartDescription>
+                </div>
                 :
-
                 <EmptyCart>
                     <p>Opa, Sua sacola de compras está vazia, que tal adicionar algo ?</p>
                 </EmptyCart>
