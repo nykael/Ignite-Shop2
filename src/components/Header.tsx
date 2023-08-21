@@ -1,31 +1,45 @@
-import { PiHandbagBold } from "react-icons/pi";
-import { Bag, Header } from "../styles/pages/app";
+import { Bag, Header as Heading } from "../styles/pages/app";
 import Image from "next/image";
-import { theme } from "../styles";
+
+import BagSvg from '../assets/bag.png'
 
 import LogoImg from'../assets/logo.svg'
-import { useState } from "react";
 import { useCart } from "../hooks/useCart";
+import { CartContextDataProps } from "../context/Bag";
 
-export function Heade() {
-    const {colors} = theme
-    const {cart} = useCart()
+interface HeaderProps {
+  toggleCard: () => void
+}
 
-       console.log('AQUIEEEE =>', cart)
+export function Header({toggleCard} : HeaderProps) {
+  const {cart} = useCart()
 
+    console.log('AQUIEEEE =>', cart)
+    const calculateTotalQuantity = (cart: CartContextDataProps[]): number => {
+      return cart.reduce((total, item) => total + item.quantity, 0);
+    };
 
     return (
-        <Header>
+        <Heading>
         <Image src={LogoImg.src} alt=""  width={200} height={130}/>
-        <Bag>
-          <PiHandbagBold color={colors.gray500} />
+        <Bag onClick={toggleCard}>
+          <Image  
+            src={BagSvg} 
+            alt="" 
+            width={24} 
+            height={24}
+          />
          { 
           cart.length !== 0 &&
           (<div>
-            <p>{cart.length}</p>
+            <p>
+              {
+              calculateTotalQuantity(cart)
+              }
+            </p>
           </div>)
          }
         </Bag>
-      </Header>
+      </Heading>
     )
 }

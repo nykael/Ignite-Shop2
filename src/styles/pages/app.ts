@@ -32,6 +32,10 @@ export const Bag = styled('div', {
     cursor: 'pointer',
     position: 'relative',
 
+    img: {
+
+    },
+
     div: {
         position: 'absolute',
         background: '$green500',

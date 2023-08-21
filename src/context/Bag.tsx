@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useReducer } from "react";
 
-interface CartContextDataProps {
+export interface CartContextDataProps {
     id: string;
     name: string;
     imageUrl: string;
@@ -27,24 +27,37 @@ interface CartContextProps {
 
 export const CartContext = createContext<CartContextProps | undefined>(undefined)
 
-const cartReducer = (state: CartState, action: CartAction) : CartState  => {
-    switch(action.type) {
-        case 'ADD_TO_CART':
-         const existingItemIndex = state.findIndex(item => item.id === action.payload.id);
-         if (existingItemIndex !== -1) {
-            const updatedCart = [...state];
-            updatedCart[existingItemIndex].quantity += 1;
-            return updatedCart;
-         }else
-         return [...state, {...action.payload, quantity : 1}];
-
-        case 'REMOVE_FROM_CART':
-            return state.filter(item => item.id !== action.payload.id)
-        default:
-            return state
+const cartReducer = (state: CartState, action: CartAction): CartState => {
+    switch (action.type) {
+      case 'ADD_TO_CART':
+        const existingItemIndex = state.findIndex(item => item.id === action.payload.id);
+        if (existingItemIndex !== -1) {
+          const updatedCart = state.map(item =>
+            item.id === action.payload.id ? { ...item, quantity: item.quantity + 1 } : item
+          );
+          return updatedCart;
+        } else {
+          return [...state, { ...action.payload, quantity: 1 }];
+        }
+  
+      case 'REMOVE_FROM_CART':
+        const itemToRemove = state.find(item => item.id === action.payload.id);
+        if(itemToRemove) {
+            if(itemToRemove.quantity > 1) {
+                const updatedCart = state.map(item => 
+                 item.id === action.payload.id ? {...item, quantity: item.quantity - 1 } : item
+                )
+                return updatedCart
+            } else {
+                return state.filter(item => item.id !== action.payload.id)
+            }
+        }
+        
+        return state
+      default:
+        return state;
     }
-    
-}
+  };
 
 
 export function BagContextProvider({ children }: CartContextProviderProps) {
