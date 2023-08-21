@@ -5,7 +5,7 @@ import BagSvg from '../assets/bag.png'
 
 import LogoImg from'../assets/logo.svg'
 import { useCart } from "../hooks/useCart";
-import { CartContextDataProps } from "../context/Bag";
+import { CalculateTotalQuantity } from "../utils/CalculateTotalQuantity";
 
 interface HeaderProps {
   toggleCard: () => void
@@ -13,11 +13,6 @@ interface HeaderProps {
 
 export function Header({toggleCard} : HeaderProps) {
   const {cart} = useCart()
-
-    console.log('AQUIEEEE =>', cart)
-    const calculateTotalQuantity = (cart: CartContextDataProps[]): number => {
-      return cart.reduce((total, item) => total + item.quantity, 0);
-    };
 
     return (
         <Heading>
@@ -34,7 +29,7 @@ export function Header({toggleCard} : HeaderProps) {
           (<div>
             <p>
               {
-              calculateTotalQuantity(cart)
+              CalculateTotalQuantity(cart)
               }
             </p>
           </div>)
