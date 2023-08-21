@@ -3,16 +3,25 @@ import { globalStyles } from '../styles/global'
 
 
 import { Container } from '../styles/pages/app'
-import { Heade } from '../components/Header'
+import { Header } from '../components/Header'
 import { BagContextProvider } from '../context/Bag'
+import { ShoppingCart } from '../components/ShopingCart'
+import { useState } from 'react'
 
 globalStyles()
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [openCart, setOpenCart] = useState(false)
+
+  const toggleCard = () => {
+    setOpenCart(!openCart)
+  }
+
   return (
     <Container>
       <BagContextProvider>
-        <Heade />
+        <ShoppingCart toggledCard={toggleCard} isOpen={openCart} />
+        <Header toggleCard={toggleCard} />
         <Component {...pageProps} />
       </BagContextProvider>
     </Container>
