@@ -1,11 +1,11 @@
-import { Bag, Header as Heading } from "../styles/pages/app";
+import { Bag, Header as Heading } from "./styles";
 import Image from "next/image";
 
-import BagSvg from '../assets/bag.png'
+import BagSvg from '../../assets/bag.png'
 
-import LogoImg from'../assets/logo.svg'
-import { useCart } from "../hooks/useCart";
-import { CalculateTotalQuantity } from "../utils/CalculateTotalQuantity";
+import LogoImg from'../../assets/logo.svg'
+import { useCart } from "../../hooks/useCart";
+import { CalculateTotalQuantity } from "../../utils/CalculateTotalQuantity";
 
 interface HeaderProps {
   toggleCard: () => void
