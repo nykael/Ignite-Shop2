@@ -4,6 +4,8 @@ import { AiOutlineFullscreenExit } from 'react-icons/ai'
 import { useCart } from "@/src/hooks/useCart";
 import { CartContextDataProps } from "@/src/context/Bag";
 import { CalculateTotalQuantity } from "@/src/utils/CalculateTotalQuantity";
+import { useState } from "react";
+import axios from "axios";
 
 interface CartProps {
   toggledCard: () => void ;
@@ -13,12 +15,33 @@ interface CartProps {
 
 
 export function ShoppingCart({toggledCard, isOpen} : CartProps) {
+    const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
     const {cart, dispatch} = useCart()
+
     
     function handleRemoveShirt(item: CartContextDataProps ) {
         console.log(item)
 
         dispatch({type: 'REMOVE_FROM_CART', payload: item })
+    }
+
+
+    async function handleBuyProduct() {
+        setIsCreatingCheckoutSession(true)
+
+        await axios.post('/api/checkout', cart.map(item => {
+            return {
+                price: item.defaultPriceId,
+                quantity: item.quantity
+            };
+        })).then((response) => {
+            const { checkoutUrl } = response.data
+ 
+             window.location.href = checkoutUrl
+         }).catch((error) => {
+           alert('Falha ao redirecionar ao checkout')
+           setIsCreatingCheckoutSession(false)
+        })
     }
 
     function handlePrice(){
@@ -50,7 +73,11 @@ export function ShoppingCart({toggledCard, isOpen} : CartProps) {
                             
                             <Card>
                                 <samp>{cartItem.name}</samp>
-                                <strong>{cartItem.price}</strong>
+
+                                <div>
+                                  <strong>{cartItem.price}</strong>
+                                  <strong>Quantidade: {cartItem.quantity}</strong>
+                                </div>
 
                                 <p onClick={() => handleRemoveShirt(cartItem)}>
                                     Remover
@@ -73,7 +100,7 @@ export function ShoppingCart({toggledCard, isOpen} : CartProps) {
                              <h1>R$ {handlePrice().toFixed(2)}</h1>
                            </div>
 
-                            <button>
+                            <button disabled={isCreatingCheckoutSession} onClick={handleBuyProduct}>
                                 Finalizar Compra
                             </button>
                     </CartDescription>

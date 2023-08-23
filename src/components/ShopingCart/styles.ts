@@ -82,6 +82,12 @@ export const Card = styled('div', {
         
     },
 
+    div:{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+    },
+
     p:{
         cursor: 'pointer',
         color: '$green300',
@@ -111,12 +117,28 @@ export const CartDescription = styled('div', {
     div: {
         display: 'flex',
         justifyContent: 'space-between',
-        lineHeight: '2rem'
+        lineHeight: '2rem',
+
+        h4: {
+            color: '$gray300',
+            fontSize: '$md',
+        },
+
+        h3: {
+            color: '$gray300',
+            fontSize: '$md',
+        },
+
+        h2: {
+            color: '$gray100',
+            fontSize: '$lg',
+        },
+        
     },
 
     button: {
         width: '100%',
-        marginTop: 55,
+        marginTop: 35,
         backgroundColor: '$green500',
         color: '$white',
         fontSize: '$md',
