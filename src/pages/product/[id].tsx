@@ -5,8 +5,6 @@ import { ImageContainer, ProductContainer, ProductDetails } from '@/src/styles/p
 
 import { stripe } from '@/src/lib/stripe'
 import Stripe from 'stripe'
-import axios from 'axios'
-import { useState } from 'react'
 import Head from 'next/head'
 import { useCart } from '@/src/hooks/useCart'
 
@@ -38,7 +36,6 @@ export default function Product({product} : ProductProps) {
     }
 
     async function handleBuyProduct() {
-        console.log(product)
         dispatch({type: 'ADD_TO_CART', payload: product})
     }
 

@@ -1,9 +1,12 @@
+import { storageRemoveCart } from "@/src/cart/storageCart";
 import { stripe } from "@/src/lib/stripe";
 import { ImageContainer, SuccessContainer, SuccessContentImage } from "@/src/styles/pages/success";
+import { CalculateTotalQuantity } from "@/src/utils/CalculateTotalQuantity";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import Stripe from "stripe";
 
 interface SuccessProps {
@@ -18,7 +21,10 @@ interface SuccessProps {
 
 export default function Success({customerName, products} : SuccessProps) {
 
-    console.log("Vamos VER", products.length )
+    useEffect(() => {
+        storageRemoveCart()
+        // PODERIA ENVIAR PARA UM HISTÓRICO 
+    }, [])
 
     return (
         <>
@@ -48,7 +54,7 @@ export default function Success({customerName, products} : SuccessProps) {
 
                         :
                         <p>
-                         uhuul <strong>{customerName}</strong>, sua compra de {products.length} camisetas já está a caminho da sua casa 
+                         uhuul <strong>{customerName}</strong>, sua compra de {CalculateTotalQuantity(products)} camisetas já está a caminho da sua casa 
                         </p>
                     }
                 <Link href={'/'}>

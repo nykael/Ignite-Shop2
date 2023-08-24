@@ -15,8 +15,6 @@ globalStyles()
 export default function App({ Component, pageProps }: AppProps) {
   const [openCart, setOpenCart] = useState(false)
   const router = useRouter();
-
-  console.log(router.pathname)
   
   const toggleCard = () => {
     setOpenCart(!openCart)

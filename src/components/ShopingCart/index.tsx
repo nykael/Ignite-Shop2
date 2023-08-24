@@ -18,10 +18,10 @@ export function ShoppingCart({toggledCard, isOpen} : CartProps) {
     const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
     const {cart, dispatch} = useCart()
 
+    console.log(cart)
+
     
     function handleRemoveShirt(item: CartContextDataProps ) {
-        console.log(item)
-
         dispatch({type: 'REMOVE_FROM_CART', payload: item })
     }
 

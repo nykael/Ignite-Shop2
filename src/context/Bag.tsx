@@ -1,4 +1,5 @@
-import { ReactNode, createContext, useReducer } from "react";
+import { ReactNode, createContext, useEffect, useReducer } from "react";
+import { storageCartSave, storageGetCart, storageRemoveCart } from "../cart/storageCart";
 
 export interface CartContextDataProps {
     id: string;
@@ -16,7 +17,8 @@ interface CartContextProviderProps {
 
 type CartAction = 
 |{ type:'ADD_TO_CART'; payload: CartContextDataProps } 
-|{ type:'REMOVE_FROM_CART'; payload: CartContextDataProps };
+|{ type:'REMOVE_FROM_CART'; payload: CartContextDataProps }
+| { type: 'INITIALIZE_CART'; payload: CartContextDataProps [] };
 
 interface CartState extends Array<CartContextDataProps> {}
 
@@ -35,36 +37,54 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
           const updatedCart = state.map(item =>
             item.id === action.payload.id ? { ...item, quantity: item.quantity + 1 } : item
           );
+          storageCartSave(updatedCart)
           return updatedCart;
         } else {
+          storageCartSave([...state, { ...action.payload, quantity: 1 }])
           return [...state, { ...action.payload, quantity: 1 }];
         }
   
-      case 'REMOVE_FROM_CART':
-        const itemToRemove = state.find(item => item.id === action.payload.id);
-        if(itemToRemove) {
-            if(itemToRemove.quantity > 1) {
-                const updatedCart = state.map(item => 
-                 item.id === action.payload.id ? {...item, quantity: item.quantity - 1 } : item
-                )
-                return updatedCart
-            } else {
-                return state.filter(item => item.id !== action.payload.id)
-            }
-        }
-        
-        return state
+        case 'REMOVE_FROM_CART':
+          const itemToRemove = state.find(item => item.id === action.payload.id);
+          if (itemToRemove) {
+              if (itemToRemove.quantity > 1) {
+                  const updatedCart = state.map(item => 
+                      item.id === action.payload.id ? { ...item, quantity: item.quantity - 1 } : item
+                  );
+                  storageCartSave(updatedCart);
+                  return updatedCart;
+              } else {
+                  const updatedCart = state.filter(item => item.id !== action.payload.id);
+                  storageCartSave(updatedCart);
+                  return updatedCart;
+              }
+          }
+          return state;
+
+        case "INITIALIZE_CART":
+          return action.payload
       default:
         return state;
     }
   };
 
 
+
+
 export function BagContextProvider({ children }: CartContextProviderProps) {
     const [cart, dispatch] = useReducer(cartReducer, []);
-  
-    console.log('AQUIEEEE =>', cart);
-  
+
+    async function loadCartFromStorage(){
+        const storageCart = await storageGetCart()
+        if(storageCart) {
+          dispatch({ type: 'INITIALIZE_CART', payload: storageCart})
+        }
+    }
+
+    useEffect(() => {
+      loadCartFromStorage()
+    },[])
+
     return (
       <CartContext.Provider value={{ cart, dispatch }}>
         {children}
