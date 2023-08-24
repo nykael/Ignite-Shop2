@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "functions": {
+    "/": {},
+    "/product/[id]": {},
+    "/success": {}
+  }
+}
